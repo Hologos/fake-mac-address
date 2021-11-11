@@ -1,0 +1,9 @@
+imports:
+    ansi: vendor/fidian/ansi/
+
+git module ansi:
+    url: https://github.com/fidian/ansi
+    pick:
+        - ansi
+        - LICENSE.md
+    rev: 225a28e589a93f78820dbf921c8261aeea964676

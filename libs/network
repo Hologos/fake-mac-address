@@ -1,0 +1,71 @@
+#! /usr/bin/env bash
+
+function fma::network::interface_exists() {
+    local interface_to_check="${1}"
+
+    if ifconfig "${interface_to_check}" &> /dev/null; then
+        fma::utils::success "interface ${interface_to_check} exists"
+    else
+        fma::utils::fail "interface ${interface_to_check} doesn't exist"
+         fma::utils::terminate
+    fi
+}
+
+function fma::network::check_mac_address_before() {
+    local interface_to_check="${1}"
+    local fake_mac_address="${2}"
+
+    fma::network::get_current_mac_address "${interface_to_check}"
+
+    if [[ "${CURRENT_MAC_ADDRESS}" == "${fake_mac_address}" ]]; then
+        fma::utils::skipped "mac address is already faked"
+        fma::utils::terminate
+    fi
+
+    fma::utils::success "mac address isn't faked yet (${CURRENT_MAC_ADDRESS})"
+}
+
+function fma::network::check_mac_address_after() {
+    local interface_to_check="${1}"
+    local fake_mac_address="${2}"
+
+    fma::network::get_current_mac_address "${interface_to_check}"
+
+    if [[ "${CURRENT_MAC_ADDRESS}" != "${fake_mac_address}" ]]; then
+        fma::utils::fail "mac address was not faked (${CURRENT_MAC_ADDRESS})"
+        fma::utils::terminate
+    fi
+
+    fma::utils::success "mac address has been successfully faked"
+}
+
+function fma::network::get_current_mac_address() {
+    local interface_to_check="${1}"
+
+    CURRENT_MAC_ADDRESS="$(ifconfig "${interface_to_check}" | grep "ether" | grep -i --only-matching -E "([0-9a-f]{2}:){5}[0-9a-f]{2}")"
+}
+
+function fma::network::fake_mac_address() {
+    local interface_to_effect="${1}"
+    local fake_mac_address="${2}"
+
+    sudo ifconfig "${interface_to_effect}" ether "${fake_mac_address}"
+
+    fma::utils::report_status "changing mac address"
+}
+
+function fma::network::restart_affected_interface() {
+    local interface_to_restart="${1}"
+
+    sudo ifconfig "${interface_to_restart}" down
+
+    fma::utils::report_status "stopping interface ${interface_to_restart}"
+
+    sleep 2
+
+    sudo ifconfig "${interface_to_restart}" up
+
+    fma::utils::report_status "starting interface ${interface_to_restart}"
+
+    sleep 2
+}

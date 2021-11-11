@@ -1,0 +1,79 @@
+#! /usr/bin/env bash
+
+set -euo pipefail
+
+# -- os detection -------------------------------------------------------------
+
+# checks if this is supported OS
+if [[ "$(uname)" != "Darwin" ]]; then
+    >&2 echo
+    >&2 echo "macOS is the only supported operating system."
+    exit 1
+fi
+
+# -- absolute dirpath ---------------------------------------------------------
+
+ABSOLUTE_DIRPATH="$( cd "$( dirname "$( [[ -L "${BASH_SOURCE[0]}" ]] && readlink "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}" )" )" && pwd )" || { \
+    >&2 echo
+    >&2 echo "Cannot determine real path of the script."
+    exit 1
+}
+
+# -- load libraries -----------------------------------------------------------
+
+# shellcheck source=vendor/fidian/ansi/ansi
+. "${ABSOLUTE_DIRPATH}/vendor/fidian/ansi/ansi"
+
+# shellcheck source=libs/utils
+. "${ABSOLUTE_DIRPATH}/libs/utils"
+
+# shellcheck source=libs/network
+. "${ABSOLUTE_DIRPATH}/libs/network"
+
+# -- initial setup ------------------------------------------------------------
+
+if [[ ${#} -eq 0 ]] && [[ -z "${FMA_CONFIG_FILEPATH+_}" ]]; then
+    fma::utils::usage
+    fma::utils::terminate "Environment variable FMA_CONFIG_FILEPATH is not set and filepath was not passed via an argument."
+elif [[ ${#} -gt 0 ]]; then
+    fma::utils::parse_input "${@}"
+fi
+
+if [[ ! -e "${FMA_CONFIG_FILEPATH}" ]]; then
+    fma::utils::terminate "Configuration file [${FMA_CONFIG_FILEPATH}] doesn't exist."
+elif [[ ! -r "${FMA_CONFIG_FILEPATH}" ]]; then
+    fma::utils::terminate "Can't read configuration file [${FMA_CONFIG_FILEPATH}]."
+fi
+
+# shellcheck source=fma.example.cfg
+. "${FMA_CONFIG_FILEPATH}"
+
+# -- global variables ---------------------------------------------------------
+
+CURRENT_MAC_ADDRESS=""
+
+# -- main program -------------------------------------------------------------
+
+echo
+echo "Pre-flight checks"
+
+echo "› checking interface ${affected_interface}"
+fma::network::interface_exists "${affected_interface}"
+
+echo "› checking current mac address of interface ${affected_interface}"
+fma::network::check_mac_address_before "${affected_interface}" "${fake_mac_address}"
+
+echo
+echo "Faking mac address"
+
+echo "› invoke sudo"
+fma::utils::invoke_sudo
+
+echo "› fake mac address ${fake_mac_address}"
+fma::network::fake_mac_address "${affected_interface}" "${fake_mac_address}"
+
+echo "› restarting interface ${affected_interface}"
+fma::network::restart_affected_interface "${affected_interface}"
+
+echo "› verifying current mac address"
+fma::network::check_mac_address_after "${affected_interface}" "${fake_mac_address}"

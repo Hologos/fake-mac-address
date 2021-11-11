@@ -1,0 +1,88 @@
+#! /usr/bin/env bash
+
+function fma::utils::terminate() {
+    if [[ ${#} -ne 0 ]]; then
+        local message="${1}"
+
+        >&2 echo
+        >&2 ansi --bold --red "The program has been terminated due to a critical error:"
+        >&2 echo "${message}"
+    fi
+
+    exit 1
+}
+
+function fma::utils::success() {
+    echo "  [  $(ansi --green "OK")  ] ${1}"
+}
+
+function fma::utils::fail() {
+    echo "  [ $(ansi --red "FAIL") ] ${1}"
+}
+
+function fma::utils::info() {
+    echo "  [ $(ansi --yellow "INFO") ] ${1}"
+}
+
+function fma::utils::skipped() {
+    echo "  [ $(ansi --blue "SKIP") ] ${1}"
+}
+
+function fma::utils::report_status() {
+    local rc_of_last_command="${?}" # ! has to be on the 1st line
+
+    local message_success="${1}"
+    local message_failure="${1}"
+
+    if [[ ${#} -eq 2 ]]; then
+        message_failure="${2}"
+    fi
+
+    if [[ ${rc_of_last_command} -eq 0 ]]; then
+        fma::utils::success "${message_success}"
+    else
+        fma::utils::fail "${message_failure}"
+    fi
+}
+
+function fma::utils::invoke_sudo() {
+
+    if sudo echo &> /dev/null; then
+        fma::utils::success "sudo authentication successfull"
+    else
+        fma::utils::fail "sudo authentication failed"
+         fma::utils::terminate
+    fi
+}
+
+function fma::utils::parse_input() {
+    if [[ ${#} -ne 2 ]]; then
+        fma::utils::usage
+        fma::utils::terminate
+    fi
+
+    if [[ "${1}" != "-c" ]]; then
+        fma::utils::usage
+        fma::utils::terminate "Unknown option [${1}]."
+    fi
+
+    FMA_CONFIG_FILEPATH="${2}"
+}
+
+function fma::utils::usage() {
+    # shellcheck disable=SC2155
+    local fmt_bold="$(ansi --bold --no-restore)"
+    # shellcheck disable=SC2155
+    local fmt_underline="$(ansi --underline --no-restore)"
+    # shellcheck disable=SC2155
+    local fmt_reset="$(ansi --reset-attrib)"
+
+    >&2 echo
+    >&2 echo "Usage: $0 [-c <config-filepath>]"
+    >&2 echo
+    >&2 echo "    ${fmt_bold}-c <filepath>${fmt_reset}"
+    >&2 echo "        Filepath to config file."
+    >&2 echo
+    >&2 echo "${fmt_underline}Environment variables${fmt_reset}"
+    >&2 echo "    ${fmt_bold}FMA_CONFIG_FILEPATH${fmt_reset} - filepath to config file"
+}
