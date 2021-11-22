@@ -46,12 +46,11 @@ function fma::utils::report_status() {
 }
 
 function fma::utils::invoke_sudo() {
-
     if sudo echo &> /dev/null; then
         fma::utils::success "sudo authentication successfull"
     else
         fma::utils::fail "sudo authentication failed"
-         fma::utils::terminate
+        fma::utils::terminate
     fi
 }
 

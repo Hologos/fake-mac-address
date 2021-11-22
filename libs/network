@@ -7,7 +7,7 @@ function fma::network::interface_exists() {
         fma::utils::success "interface ${interface_to_check} exists"
     else
         fma::utils::fail "interface ${interface_to_check} doesn't exist"
-         fma::utils::terminate
+        fma::utils::terminate
     fi
 }
 
