@@ -2,14 +2,34 @@
 
 set -euo pipefail
 
+# -- global variables ---------------------------------------------------------
+
+FMA_OS_LINUX="linux"
+FMA_OS_MACOS="macos"
+FMA_OS_UNDEF="undef"
+
+FMA_OS="${FMA_OS_UNDEF}"
+FMA_OS=""
+
 # -- os detection -------------------------------------------------------------
 
+current_os="$(uname)"
+
 # checks if this is supported OS
-if [[ "$(uname)" != "Darwin" ]]; then
-    >&2 echo
-    >&2 echo "macOS is the only supported operating system."
-    exit 1
-fi
+case "${current_os}" in
+    Linux)
+        FMA_OS="${FMA_OS_LINUX}"
+    ;;
+
+    Darwin)
+        FMA_OS="${FMA_OS_MACOS}"
+    ;;
+
+    *)
+        >&2 echo
+        >&2 echo "${current_os} is not supported operating system."
+        exit 1
+esac
 
 # -- absolute dirpath ---------------------------------------------------------
 
@@ -30,6 +50,18 @@ ABSOLUTE_DIRPATH="$( cd "$( dirname "$( [[ -L "${BASH_SOURCE[0]}" ]] && readlink
 # shellcheck source=libs/network
 . "${ABSOLUTE_DIRPATH}/libs/network"
 
+case "${FMA_OS}" in
+    "${FMA_OS_LINUX}")
+        # shellcheck source=libs/network.linux
+        . "${ABSOLUTE_DIRPATH}/libs/network.linux"
+    ;;
+
+    "${FMA_OS_MACOS}")
+        # shellcheck source=libs/network.macos
+        . "${ABSOLUTE_DIRPATH}/libs/network.macos"
+    ;;
+esac
+
 # -- initial setup ------------------------------------------------------------
 
 if [[ ${#} -eq 0 ]] && [[ -z "${FMA_CONFIG_FILEPATH+_}" ]]; then
@@ -47,10 +79,6 @@ fi
 
 # shellcheck source=fma.example.cfg
 . "${FMA_CONFIG_FILEPATH}"
-
-# -- global variables ---------------------------------------------------------
-
-CURRENT_MAC_ADDRESS=""
 
 # -- main program -------------------------------------------------------------
 
