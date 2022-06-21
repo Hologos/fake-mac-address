@@ -66,6 +66,12 @@ function fma::utils::invoke_sudo() {
     fi
 }
 
+function fma::utils::is_installed() {
+    command which "${1}" &> /dev/null && return 0
+
+    return 1
+}
+
 function fma::utils::parse_input() {
     if [[ ${#} -ne 2 ]]; then
         fma::utils::usage
