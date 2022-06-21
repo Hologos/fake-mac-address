@@ -1,15 +1,23 @@
 #! /usr/bin/env bash
 
 function fma::utils::terminate() {
-    if [[ ${#} -ne 0 ]]; then
-        local message="${1}"
+    local exit_code="1"
+    local message=""
 
+    if [[ ${#} -eq 1 ]]; then
+        message="${1}"
+    elif [[ ${#} -eq 2 ]]; then
+        exit_code="${1}"
+        message="${2}"
+    fi
+
+    if [[ ${#} -ne 0 ]]; then
         >&2 echo
         >&2 ansi --bold --red "The program has been terminated due to a critical error:"
         >&2 echo "${message}"
     fi
 
-    exit 1
+    exit "${exit_code}"
 }
 
 function fma::utils::terminate_with_code() {
