@@ -45,15 +45,6 @@ function fma::network::get_current_mac_address() {
     CURRENT_MAC_ADDRESS="$(ifconfig "${interface_to_check}" | grep "ether" | grep -i --only-matching -E "([0-9a-f]{2}:){5}[0-9a-f]{2}")"
 }
 
-function fma::network::fake_mac_address() {
-    local interface_to_effect="${1}"
-    local fake_mac_address="${2}"
-
-    sudo ifconfig "${interface_to_effect}" ether "${fake_mac_address}"
-
-    fma::utils::report_status "changing mac address"
-}
-
 function fma::network::restart_affected_interface() {
     local interface_to_restart="${1}"
 
