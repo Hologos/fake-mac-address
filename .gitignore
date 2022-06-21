@@ -1,3 +1,5 @@
 /.vscode
 /vendor
 /.peru
+/fake-mac-address.tar.gz
+/make-release

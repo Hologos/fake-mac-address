@@ -19,7 +19,7 @@ function fma::network::check_mac_address_before() {
 
     if [[ "${CURRENT_MAC_ADDRESS}" == "${fake_mac_address}" ]]; then
         fma::utils::skipped "mac address is already faked"
-        fma::utils::terminate
+        fma::utils::terminate_with_code 128
     fi
 
     fma::utils::success "mac address isn't faked yet (${CURRENT_MAC_ADDRESS})"
@@ -43,15 +43,6 @@ function fma::network::get_current_mac_address() {
     local interface_to_check="${1}"
 
     CURRENT_MAC_ADDRESS="$(ifconfig "${interface_to_check}" | grep "ether" | grep -i --only-matching -E "([0-9a-f]{2}:){5}[0-9a-f]{2}")"
-}
-
-function fma::network::fake_mac_address() {
-    local interface_to_effect="${1}"
-    local fake_mac_address="${2}"
-
-    sudo ifconfig "${interface_to_effect}" ether "${fake_mac_address}"
-
-    fma::utils::report_status "changing mac address"
 }
 
 function fma::network::restart_affected_interface() {

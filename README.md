@@ -1,6 +1,6 @@
 # Fake mac address
 
-Change network interface mac address on your Mac (macOS only).
+Change network interface mac address on your Mac or Linux.
 
 ```
 $ fake-mac-address
@@ -31,6 +31,12 @@ Password:
 1) Download archive from [the release page](https://github.com/Hologos/fake-mac-address/releases) and unpack it.
 2) Create fma.cfg file (follow instructions in section [Configuration file](#configuration-file)).
 3) Run the script.
+
+### Dependencies
+
+If on Linux, make sure you have all those things installed:
+
+- `macchanger`: to change mac address
 
 ### Cloning repo
 

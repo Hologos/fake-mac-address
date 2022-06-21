@@ -1,0 +1,31 @@
+#! /usr/bin/env bash
+
+function fma::flow::preflight_checks() {
+    echo
+    echo "Pre-flight checks"
+
+    echo "› checking interface ${affected_interface}"
+    fma::network::interface_exists "${affected_interface}"
+
+    echo "› checking current mac address of interface ${affected_interface}"
+    fma::network::check_mac_address_before "${affected_interface}" "${fake_mac_address}"
+
+    # OS specific pre-flight checks
+    fma::flow::"$FMA_OS"::preflight_checks
+}
+
+function fma::flow::fake_mac_address() {
+    echo
+    echo "Faking mac address"
+
+    echo "› invoke sudo"
+    fma::utils::invoke_sudo
+
+    # OS specific faking
+    fma::flow::"$FMA_OS"::fake_mac_address
+
+    echo "› verifying current mac address"
+    fma::network::check_mac_address_after "${affected_interface}" "${fake_mac_address}"
+}
+
+
