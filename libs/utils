@@ -12,6 +12,10 @@ function fma::utils::terminate() {
     exit 1
 }
 
+function fma::utils::terminate_with_code() {
+    exit "${1}"
+}
+
 function fma::utils::success() {
     echo "  [  $(ansi --green "OK")  ] ${1}"
 }
