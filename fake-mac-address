@@ -50,15 +50,24 @@ ABSOLUTE_DIRPATH="$( cd "$( dirname "$( [[ -L "${BASH_SOURCE[0]}" ]] && readlink
 # shellcheck source=libs/network
 . "${ABSOLUTE_DIRPATH}/libs/network"
 
+# shellcheck source=libs/flow
+. "${ABSOLUTE_DIRPATH}/libs/flow"
+
 case "${FMA_OS}" in
     "${FMA_OS_LINUX}")
         # shellcheck source=libs/network.linux
         . "${ABSOLUTE_DIRPATH}/libs/network.linux"
+
+        # shellcheck source=libs/flow.linux
+        . "${ABSOLUTE_DIRPATH}/libs/flow.linux"
     ;;
 
     "${FMA_OS_MACOS}")
         # shellcheck source=libs/network.macos
         . "${ABSOLUTE_DIRPATH}/libs/network.macos"
+
+        # shellcheck source=libs/flow.macos
+        . "${ABSOLUTE_DIRPATH}/libs/flow.macos"
     ;;
 esac
 
@@ -82,26 +91,8 @@ fi
 
 # -- main program -------------------------------------------------------------
 
-echo
-echo "Pre-flight checks"
+#! /usr/bin/env bash
 
-echo "› checking interface ${affected_interface}"
-fma::network::interface_exists "${affected_interface}"
+fma::flow::preflight_checks
 
-echo "› checking current mac address of interface ${affected_interface}"
-fma::network::check_mac_address_before "${affected_interface}" "${fake_mac_address}"
-
-echo
-echo "Faking mac address"
-
-echo "› invoke sudo"
-fma::utils::invoke_sudo
-
-echo "› fake mac address ${fake_mac_address}"
-fma::network::fake_mac_address "${affected_interface}" "${fake_mac_address}"
-
-echo "› restarting interface ${affected_interface}"
-fma::network::restart_affected_interface "${affected_interface}"
-
-echo "› verifying current mac address"
-fma::network::check_mac_address_after "${affected_interface}" "${fake_mac_address}"
+fma::flow::fake_mac_address
