@@ -3,7 +3,7 @@
 function fma::flow::linux::preflight_checks() {
     echo "› checking installed dependencies "
 
-    if ! fma::utils::is_installed "macchanger"; then
+    if fma::utils::is_installed "macchanger"; then
         fma::utils::success "macchanger is installed"
     else
         fma::utils::fail "macchanger is not installed"
