@@ -50,7 +50,7 @@ function fma::network::start_affected_interface() {
 
     sudo ifconfig "${interface_to_start}" up
 
-    fma::utils::report_status "starting interface ${interface_to_restart}"
+    fma::utils::report_status "starting interface ${interface_to_start}"
 }
 
 function fma::network::stop_affected_interface() {
@@ -58,7 +58,7 @@ function fma::network::stop_affected_interface() {
 
     sudo ifconfig "${interface_to_stop}" down
 
-    fma::utils::report_status "stopping interface ${interface_to_restart}"
+    fma::utils::report_status "stopping interface ${interface_to_stop}"
 }
 
 function fma::network::restart_affected_interface() {
