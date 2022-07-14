@@ -54,7 +54,7 @@ peru sync
 ### Usage
 
 ```
-fake-mac-address [-c <config-filepath>] [-i <affected-interface>] [-m <fake_mac_address>]
+fake-mac-address [-c <config-filepath>] [-i <affected-interface>] [-m <fake_mac_address>] [-h]
 
     -c <filepath>
         Filepath to config file.
@@ -64,6 +64,9 @@ fake-mac-address [-c <config-filepath>] [-i <affected-interface>] [-m <fake_mac_
 
     -m <fake_mac_address>
         MAC address to spoof.
+
+    -h
+        Prints this help.
 
 Environment variables
     FMA_CONFIG_FILEPATH - filepath to config file

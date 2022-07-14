@@ -95,7 +95,7 @@ function fma::utils::usage() {
     local fmt_reset="$(ansi --reset-attrib)"
 
     >&2 echo
-    >&2 echo "Usage: $0 [-${_FMA_CONFIG_FILEPATH_OPTION} <config-filepath>] [-${_FMA_AFFECTED_INTERFACE_OPTION} <affected-interface>] [-${_FMA_FAKE_MAC_ADDRESS_OPTION} <fake_mac_address>]"
+    >&2 echo "Usage: $0 [-${_FMA_CONFIG_FILEPATH_OPTION} <config-filepath>] [-${_FMA_AFFECTED_INTERFACE_OPTION} <affected-interface>] [-${_FMA_FAKE_MAC_ADDRESS_OPTION} <fake_mac_address>] [-h]"
     >&2 echo
     >&2 echo "    ${fmt_bold}-${_FMA_CONFIG_FILEPATH_OPTION} <filepath>${fmt_reset}"
     >&2 echo "        Filepath to config file."
@@ -105,6 +105,9 @@ function fma::utils::usage() {
     >&2 echo
     >&2 echo "    ${fmt_bold}-${_FMA_FAKE_MAC_ADDRESS_OPTION} <fake_mac_address>${fmt_reset}"
     >&2 echo "        MAC address to spoof."
+    >&2 echo
+    >&2 echo "    ${fmt_bold}-${_FMA_HELP_OPTION}${fmt_reset}"
+    >&2 echo "        Prints this help."
     >&2 echo
     >&2 echo "${fmt_underline}Environment variables${fmt_reset}"
     >&2 echo "    ${fmt_bold}FMA_CONFIG_FILEPATH${fmt_reset} - filepath to config file"
