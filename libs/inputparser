@@ -1,5 +1,9 @@
 #! /usr/bin/env bash
 
+_FMA_CONFIG_FILEPATH_OPTION="c"
+_FMA_AFFECTED_INTERFACE_OPTION="i"
+_FMA_FAKE_MAC_ADDRESS_OPTION="m"
+
 function fma::inputparser::parse_input() {
     while [[ ${#} -ne 0 ]] && [[ "${1}" != "" ]]; do
         local input="${1}"
@@ -7,17 +11,17 @@ function fma::inputparser::parse_input() {
         # TODO: options jako konstanty
         case "${input}" in
 
-            "-c" )
+            "-${_FMA_CONFIG_FILEPATH_OPTION}" )
                 shift
                 FMA_CONFIG_FILEPATH="${1}"
             ;;
 
-            "-i" )
+            "-${_FMA_AFFECTED_INTERFACE_OPTION}" )
                 shift
                 FMA_AFFECTED_INTERFACE="${1}"
             ;;
 
-            "-m" )
+            "-${_FMA_FAKE_MAC_ADDRESS_OPTION}" )
                 shift
                 FMA_FAKE_MAC_ADDRESS="${1}"
             ;;
