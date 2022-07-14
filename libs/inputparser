@@ -1,0 +1,32 @@
+#! /usr/bin/env bash
+
+function fma::inputparser::parse_input() {
+    while [[ ${#} -ne 0 ]] && [[ "${1}" != "" ]]; do
+        local input="${1}"
+
+        # TODO: options jako konstanty
+        case "${input}" in
+
+            "-c" )
+                shift
+                FMA_CONFIG_FILEPATH="${1}"
+            ;;
+
+            "-i" )
+                shift
+                FMA_AFFECTED_INTERFACE="${1}"
+            ;;
+
+            "-m" )
+                shift
+                FMA_FAKE_MAC_ADDRESS="${1}"
+            ;;
+
+            * )
+                fma::utils::usage
+                fma::utils::terminate "Unknown option [${input}]."
+        esac
+
+        shift
+    done
+}

@@ -17,7 +17,7 @@ function fma::network::check_mac_address_before() {
 
     fma::network::get_current_mac_address "${interface_to_check}"
 
-    if [[ "${CURRENT_MAC_ADDRESS}" == "${fake_mac_address}" ]]; then
+    if [[ "${CURRENT_MAC_ADDRESS}" == "${FMA_FAKE_MAC_ADDRESS}" ]]; then
         fma::utils::skipped "mac address is already faked"
         fma::utils::terminate_with_code 128
     fi
@@ -31,7 +31,7 @@ function fma::network::check_mac_address_after() {
 
     fma::network::get_current_mac_address "${interface_to_check}"
 
-    if [[ "${CURRENT_MAC_ADDRESS}" != "${fake_mac_address}" ]]; then
+    if [[ "${CURRENT_MAC_ADDRESS}" != "${FMA_FAKE_MAC_ADDRESS}" ]]; then
         fma::utils::fail "mac address was not faked (${CURRENT_MAC_ADDRESS})"
         fma::utils::terminate
     fi

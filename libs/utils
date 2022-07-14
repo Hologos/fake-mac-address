@@ -72,18 +72,17 @@ function fma::utils::is_installed() {
     return 1
 }
 
-function fma::utils::parse_input() {
-    if [[ ${#} -ne 2 ]]; then
-        fma::utils::usage
-        fma::utils::terminate
+function fma::utils::load_configuration() {
+    # shellcheck source=fma.example.cfg
+    . "${FMA_CONFIG_FILEPATH}"
+
+    if [[ -z "${FMA_AFFECTED_INTERFACE+_}" ]]; then
+        FMA_AFFECTED_INTERFACE="${affected_interface}"
     fi
 
-    if [[ "${1}" != "-c" ]]; then
-        fma::utils::usage
-        fma::utils::terminate "Unknown option [${1}]."
+    if [[ -z "${FMA_FAKE_MAC_ADDRESS+_}" ]]; then
+        FMA_FAKE_MAC_ADDRESS="${fake_mac_address}"
     fi
-
-    FMA_CONFIG_FILEPATH="${2}"
 }
 
 function fma::utils::usage() {
@@ -95,10 +94,16 @@ function fma::utils::usage() {
     local fmt_reset="$(ansi --reset-attrib)"
 
     >&2 echo
-    >&2 echo "Usage: $0 [-c <config-filepath>]"
+    >&2 echo "Usage: $0 [-c <config-filepath>] [-i <affected-interface>] [-m <fake_mac_address>]"
     >&2 echo
     >&2 echo "    ${fmt_bold}-c <filepath>${fmt_reset}"
     >&2 echo "        Filepath to config file."
+    >&2 echo
+    >&2 echo "    ${fmt_bold}-i <affected-interface>${fmt_reset}"
+    >&2 echo "        Interface to affect."
+    >&2 echo
+    >&2 echo "    ${fmt_bold}-m <fake_mac_address>${fmt_reset}"
+    >&2 echo "        MAC address to spoof."
     >&2 echo
     >&2 echo "${fmt_underline}Environment variables${fmt_reset}"
     >&2 echo "    ${fmt_bold}FMA_CONFIG_FILEPATH${fmt_reset} - filepath to config file"

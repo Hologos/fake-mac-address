@@ -12,14 +12,14 @@ function fma::flow::linux::preflight_checks() {
 }
 
 function fma::flow::linux::fake_mac_address() {
-    echo "› stpping interface ${affected_interface}"
-    fma::network::stop_affected_interface "${affected_interface}"
+    echo "› stpping interface ${FMA_AFFECTED_INTERFACE}"
+    fma::network::stop_affected_interface "${FMA_AFFECTED_INTERFACE}"
 
-    echo "› fake mac address ${fake_mac_address}"
-    fma::network::fake_mac_address "${affected_interface}" "${fake_mac_address}"
+    echo "› fake mac address FMA_FAKE_MAC_ADDRESS"
+    fma::network::fake_mac_address "${FMA_AFFECTED_INTERFACE}" "${FMA_FAKE_MAC_ADDRESS}"
 
-    echo "› starting interface ${affected_interface}"
-    fma::network::start_affected_interface "${affected_interface}"
+    echo "› starting interface ${FMA_AFFECTED_INTERFACE}"
+    fma::network::start_affected_interface "${FMA_AFFECTED_INTERFACE}"
 }
 
 

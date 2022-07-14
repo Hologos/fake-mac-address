@@ -4,7 +4,7 @@ function fma::network::fake_mac_address() {
     local interface_to_effect="${1}"
     local fake_mac_address="${2}"
 
-    sudo ifconfig "${interface_to_effect}" ether "${fake_mac_address}"
+    sudo ifconfig "${interface_to_effect}" ether "${FMA_FAKE_MAC_ADDRESS}"
 
     fma::utils::report_status "changing mac address"
 }
