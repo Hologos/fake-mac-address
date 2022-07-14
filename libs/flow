@@ -4,14 +4,11 @@ function fma::flow::preflight_checks() {
     echo
     echo "Pre-flight checks"
 
-    echo "› checking configuration"
-    fma::flow::check_configuration
+    echo "› checking interface ${FMA_AFFECTED_INTERFACE}"
+    fma::network::interface_exists "${FMA_AFFECTED_INTERFACE}"
 
-    echo "› checking interface ${affected_interface}"
-    fma::network::interface_exists "${affected_interface}"
-
-    echo "› checking current mac address of interface ${affected_interface}"
-    fma::network::check_mac_address_before "${affected_interface}" "${fake_mac_address}"
+    echo "› checking current mac address of interface ${FMA_AFFECTED_INTERFACE}"
+    fma::network::check_mac_address_before "${FMA_AFFECTED_INTERFACE}" "${FMA_FAKE_MAC_ADDRESS}"
 
     # OS specific pre-flight checks
     fma::flow::"$FMA_OS"::preflight_checks
@@ -28,17 +25,5 @@ function fma::flow::fake_mac_address() {
     fma::flow::"$FMA_OS"::fake_mac_address
 
     echo "› verifying current mac address"
-    fma::network::check_mac_address_after "${affected_interface}" "${fake_mac_address}"
-}
-
-function fma::flow::check_configuration() {
-    if [[ -z "${affected_interface+x}" ]]; then
-        fma::utils::terminate "Configuration parametr [affected_interface] is not set."
-    fi
-
-    if [[ -z "${fake_mac_address+x}" ]]; then
-        fma::utils::terminate "Configuration parametr [fake_mac_address] is not set."
-    fi
-
-    fma::utils::success "Configuration is set."
+    fma::network::check_mac_address_after "${FMA_AFFECTED_INTERFACE}" "${FMA_FAKE_MAC_ADDRESS}"
 }

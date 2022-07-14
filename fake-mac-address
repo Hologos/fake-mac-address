@@ -47,6 +47,9 @@ ABSOLUTE_DIRPATH="$( cd "$( dirname "$( [[ -L "${BASH_SOURCE[0]}" ]] && readlink
 # shellcheck source=libs/utils
 . "${ABSOLUTE_DIRPATH}/libs/utils"
 
+# shellcheck source=libs/inputparser
+. "${ABSOLUTE_DIRPATH}/libs/inputparser"
+
 # shellcheck source=libs/network
 . "${ABSOLUTE_DIRPATH}/libs/network"
 
@@ -73,11 +76,11 @@ esac
 
 # -- initial setup ------------------------------------------------------------
 
-if [[ ${#} -eq 0 ]] && [[ -z "${FMA_CONFIG_FILEPATH+_}" ]]; then
+fma::inputparser::parse_input "${@}"
+
+if [[ -z "${FMA_CONFIG_FILEPATH+_}" ]]; then
     fma::utils::usage
     fma::utils::terminate "Environment variable FMA_CONFIG_FILEPATH is not set and filepath was not passed via an argument."
-elif [[ ${#} -gt 0 ]]; then
-    fma::utils::parse_input "${@}"
 fi
 
 if [[ ! -e "${FMA_CONFIG_FILEPATH}" ]]; then
@@ -86,8 +89,15 @@ elif [[ ! -r "${FMA_CONFIG_FILEPATH}" ]]; then
     fma::utils::terminate "Can't read configuration file [${FMA_CONFIG_FILEPATH}]."
 fi
 
-# shellcheck source=fma.example.cfg
-. "${FMA_CONFIG_FILEPATH}"
+fma::utils::load_configuration
+
+if [[ -z "${FMA_AFFECTED_INTERFACE+_}" ]]; then
+    fma::utils::usage
+    fma::utils::terminate "Affected interface is not set in configuration nor was passed via an argument."
+elif [[ -z "${FMA_FAKE_MAC_ADDRESS+_}" ]]; then
+    fma::utils::usage
+    fma::utils::terminate "Fake mac address is not set in configuration nor was passed via an argument."
+fi
 
 # -- main program -------------------------------------------------------------
 

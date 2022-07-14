@@ -29,7 +29,7 @@ Password:
 **Important:** bash v3.2 and higher is required
 
 1) Download archive from [the release page](https://github.com/Hologos/fake-mac-address/releases) and unpack it.
-2) Create fma.cfg file (follow instructions in section [Configuration file](#configuration-file)).
+2) Create fma.cfg file (follow instructions in section [Configuration file](#configuration-file)) or pass the configuration as arguments.
 3) Run the script.
 
 ### Dependencies
@@ -54,13 +54,23 @@ peru sync
 ### Usage
 
 ```
-fake-mac-address [-c <config-filepath>]
+fake-mac-address [-c <config-filepath>] [-i <affected-interface>] [-m <fake_mac_address>] [-h]
 
     -c <filepath>
         Filepath to config file.
 
+    -i <affected-interface>
+        Interface to affect.
+
+    -m <fake_mac_address>
+        MAC address to spoof.
+
+    -h
+        Prints this help.
+
 Environment variables
     FMA_CONFIG_FILEPATH - filepath to config file
+
 ```
 
 You either have to specify the filepath to configuration file via an argument `-c` or you can set an environment variable `FMA_CONFIG_FILEPATH`.
