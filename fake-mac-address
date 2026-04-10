@@ -6,17 +6,12 @@ set -euo pipefail
 
 FMA_OS_LINUX="linux"
 FMA_OS_MACOS="macos"
-FMA_OS_UNDEF="undef"
-
-FMA_OS="${FMA_OS_UNDEF}"
-FMA_OS=""
 
 # -- os detection -------------------------------------------------------------
 
-current_os="$(uname)"
+FMA_OS="$(uname)"
 
-# checks if this is supported OS
-case "${current_os}" in
+case "${FMA_OS}" in
     Linux)
         FMA_OS="${FMA_OS_LINUX}"
     ;;
@@ -27,7 +22,7 @@ case "${current_os}" in
 
     *)
         >&2 echo
-        >&2 echo "${current_os} is not supported operating system."
+        >&2 echo "${FMA_OS} is not supported operating system."
         exit 1
 esac
 
