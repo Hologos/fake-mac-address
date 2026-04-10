@@ -29,7 +29,7 @@ Password:
 **Important:** bash v3.2 and higher is required
 
 1) Download archive from [the release page](https://github.com/Hologos/fake-mac-address/releases) and unpack it.
-2) Create fma.cfg file (follow instructions in section [Configuration file](#configuration-file)) or pass the configuration as arguments.
+2) Create `fma.cfg` file (follow instructions in section [Configuration file](#configuration-file)) or pass the configuration as arguments.
 3) Run the script.
 
 ### Dependencies
